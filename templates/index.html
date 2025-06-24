@@ -91,7 +91,9 @@
       <textarea name="work_experience" placeholder="Masalan: 2015-2020 - O‘qituvchi, Toshkent sh."></textarea>
 
       <label>Telefon raqami</label>
-      <input name="contact" placeholder="Masalan: +998901234567">
+      <input type="text" name="phone" placeholder="Masalan: +998901234567" required>
+
+      <input type="hidden" name="tg_id" id="tg_id">
 
       <label>Rasm yuklash</label>
       <input type="file" name="photo" id="photo">
@@ -126,6 +128,15 @@
       container.appendChild(div);
     }
 
+
+    const params = new URLSearchParams(window.location.search);
+    const tgId = params.get("id");
+    if (tgId) {
+      const hiddenInput = document.getElementById('tg_id');
+      if (hiddenInput) hiddenInput.value = tgId;
+    }
+
+
     async function submitForm() {
       const form = document.getElementById('resumeForm');
       const formData = new FormData(form);
@@ -144,9 +155,9 @@
         deputat: formData.get('deputat'),
         dav_mukofoti: formData.get('dav_mukofoti'),
         work_experience: formData.get('work_experience'),
-        contact: formData.get('contact'),
+        phone: formData.get('phone'),    // Telefon raqami (foydalanuvchi kiritadi)
         photo_path: formData.get('photo')?.name || 'Yuklanmagan',
-        from_user: {id: formData.get('contact')},  // <-- Telegram ID sifatida foydalanamiz
+        from_user: { id: formData.get('tg_id') },  // Telegram ID (botdan keladi)
         relatives: []
       };
 
