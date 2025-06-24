@@ -1,19 +1,15 @@
-import os
-import asyncio
-from threading import Thread
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi.responses import JSONResponse
 
-from loader import bot, dp
-from aiogram import types
-from aiogram.utils import executor
-from utils.notify_admins import on_startup_notify
-from utils.set_bot_commands import set_default_commands
+from loader import bot
 from handlers.users.word import generate_resume_doc
 
-
 app = FastAPI()
+
+
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+
 templates = Jinja2Templates(directory="templates")
 
 
@@ -31,20 +27,21 @@ async def receive_resume(request: Request):
         if not chat_id:
             return JSONResponse(content={"error": "contact (Telegram ID) kerak"}, status_code=400)
 
-        # Xabar
-        msg = f"<b>📄 Yangi rezyume:</b>\n\n"
-        msg += f"<b>Ism:</b> {data.get('full_name')}\n"
-        msg += f"<b>Tug‘ilgan sana:</b> {data.get('birth_date')}\n"
-        msg += f"<b>Mutaxassisligi:</b> {data.get('specialization')}\n"
+        # ✅ Matnli xabar tayyorlash
+        message = f"<b>📄 Yangi rezyume:</b>\n\n"
+        message += f"<b>Ism:</b> {data.get('full_name')}\n"
+        message += f"<b>Tug‘ilgan sana:</b> {data.get('birth_date')}\n"
+        message += f"<b>Mutaxassisligi:</b> {data.get('specialization')}\n"
 
         if data.get("relatives"):
-            msg += "\n<b>Yaqin qarindoshlari:</b>\n"
+            message += "\n<b>Yaqin qarindoshlari:</b>\n"
             for idx, rel in enumerate(data["relatives"], 1):
-                msg += f"{idx}. {rel.get('relation_type', '')}, {rel.get('full_name', '')}, {rel.get('b_year_place', '')}, {rel.get('job_title', '')}, {rel.get('address', '')}\n"
+                message += f"{idx}. {rel.get('relation_type', '')}, {rel.get('full_name', '')}, {rel.get('b_year_place', '')}, {rel.get('job_title', '')}, {rel.get('address', '')}\n"
 
-        await bot.send_message(chat_id, msg)
+        # ✅ Matnni yuborish
+        await bot.send_message(chat_id, message)
 
-        # Word fayl yuborish
+        # ✅ Word faylni yaratish va yuborish
         filename = generate_resume_doc(data)
         with open(filename, "rb") as doc_file:
             await bot.send_document(chat_id, doc_file)
@@ -53,20 +50,3 @@ async def receive_resume(request: Request):
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-
-
-# Botni fon jarayonda ishga tushiramiz
-def start_bot():
-    async def on_startup(dispatcher):
-        await set_default_commands(dispatcher)
-        await on_startup_notify(dispatcher)
-
-    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
-
-
-# Run FastAPI + Telegram bot
-if __name__ == "__main__":
-    Thread(target=start_bot).start()
-
-    import uvicorn
-    uvicorn.run("fastapi_app:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
