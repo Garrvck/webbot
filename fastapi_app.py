@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from loader import bot
 from handlers.users.word import generate_resume_doc
+from handlers.users.start import user_data
 
 app = FastAPI()
 
@@ -22,31 +23,43 @@ async def serve_form(request: Request):
 async def receive_resume(request: Request):
     try:
         data = await request.json()
-        chat_id = data.get("from_user", {}).get("id")
+        user_id = data.get("from_user", {}).get("id")
+        if not user_id:
+            return JSONResponse(content={"error": "User ID yo'q"}, status_code=400)
 
-        if not chat_id:
-            return JSONResponse(content={"error": "contact (Telegram ID) kerak"}, status_code=400)
+        user_data[user_id] = data  # vaqtincha saqlaymiz
 
-        # ✅ Matnli xabar tayyorlash
-        message = f"<b>📄 Yangi rezyume:</b>\n\n"
-        message += f"<b>Ism:</b> {data.get('full_name')}\n"
-        message += f"<b>Tug‘ilgan sana:</b> {data.get('birth_date')}\n"
-        message += f"<b>Mutaxassisligi:</b> {data.get('specialization')}\n"
+        await bot.send_message(user_id, "✅ Ma'lumotlar qabul qilindi.\n📸 Endi rasmni yuboring.")
+        return {"status": "waiting_for_photo"}
 
-        if data.get("relatives"):
-            message += "\n<b>Yaqin qarindoshlari:</b>\n"
-            for idx, rel in enumerate(data["relatives"], 1):
-                message += f"{idx}. {rel.get('relation_type', '')}, {rel.get('full_name', '')}, {rel.get('b_year_place', '')}, {rel.get('job_title', '')}, {rel.get('address', '')}\n"
 
-        # ✅ Matnni yuborish
-        await bot.send_message(chat_id, message)
-
-        # ✅ Word faylni yaratish va yuborish
-        filename = generate_resume_doc(data)
-        with open(filename, "rb") as doc_file:
-            await bot.send_document(chat_id, doc_file)
-
-        return {"status": "success"}
-
+        # data = await request.json()
+        # chat_id = data.get("from_user", {}).get("id")
+        #
+        # if not chat_id:
+        #     return JSONResponse(content={"error": "contact (Telegram ID) kerak"}, status_code=400)
+        #
+    #
+    #     # ✅ Matnli xabar tayyorlash
+    #     message = f"<b>📄 Yangi rezyume:</b>\n\n"
+    #     message += f"<b>Ism:</b> {data.get('full_name')}\n"
+    #     message += f"<b>Tug‘ilgan sana:</b> {data.get('birth_date')}\n"
+    #     message += f"<b>Mutaxassisligi:</b> {data.get('specialization')}\n"
+    #
+    #     if data.get("relatives"):
+    #         message += "\n<b>Yaqin qarindoshlari:</b>\n"
+    #         for idx, rel in enumerate(data["relatives"], 1):
+    #             message += f"{idx}. {rel.get('relation_type', '')}, {rel.get('full_name', '')}, {rel.get('b_year_place', '')}, {rel.get('job_title', '')}, {rel.get('address', '')}\n"
+    #
+    #     # ✅ Matnni yuborish
+    #     await bot.send_message(chat_id, message)
+    #
+    #     # ✅ Word faylni yaratish va yuborish
+    #     filename = generate_resume_doc(data)
+    #     with open(filename, "rb") as doc_file:
+    #         await bot.send_document(chat_id, doc_file)
+    #
+    #     return {"status": "success"}
+    #
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
