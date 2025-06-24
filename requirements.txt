@@ -5,3 +5,4 @@ python-docx~=1.1.2
 marshmallow>=3.10,<4.0
 fastapi~=0.115.10
 unicorn
+jinja2
