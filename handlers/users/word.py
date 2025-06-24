@@ -121,7 +121,7 @@ def generate_resume_doc(resume: dict):
     # Footerda telefon raqami
     footer = doc.sections[0].footer
     paragraph = footer.paragraphs[0]
-    contact = resume.get("contact", "")
+    contact = resume.get("phone", "")
     paragraph.text = f"Tel: {contact}"
     paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
     for run in paragraph.runs:
