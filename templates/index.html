@@ -126,7 +126,7 @@
       container.appendChild(div);
     }
 
-    function submitForm() {
+    async function submitForm() {
       const form = document.getElementById('resumeForm');
       const formData = new FormData(form);
       const data = {
@@ -146,6 +146,7 @@
         work_experience: formData.get('work_experience'),
         contact: formData.get('contact'),
         photo_path: formData.get('photo')?.name || 'Yuklanmagan',
+        from_user: {id: formData.get('contact')},  // <-- Telegram ID sifatida foydalanamiz
         relatives: []
       };
 
@@ -161,8 +162,22 @@
         data.relatives.push(relative);
       });
 
-      console.log(data); // bu yerda siz fetch bilan serverga yuborishingiz mumkin
-      alert("Ma'lumotlar tayyorlandi. Console'ni tekshiring.");
+      try {
+        const response = await fetch("/send_resume_data", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (result.status === "success") {
+          alert("✅ Ma’lumotlar muvaffaqiyatli yuborildi!");
+        } else {
+          alert("❌ Xatolik: " + result.error);
+        }
+      } catch (error) {
+        alert("❌ Serverga ulanishda xatolik: " + error.message);
+      }
     }
   </script>
 </body>
