@@ -8,3 +8,4 @@ unicorn
 jinja2
 lxml
 typing-extensions
+uvicorn[standard]
