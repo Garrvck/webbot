@@ -6,3 +6,5 @@ marshmallow>=3.10,<4.0
 fastapi~=0.115.10
 unicorn
 jinja2
+lxml
+typing-extensions
