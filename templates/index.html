@@ -123,29 +123,46 @@
         <label>Ish joyi va lavozimi</label>
         <input name="job_title" placeholder="Toshkent shahri 16-maktab, O'qituvchi">
         <label>Yashash joyi</label>
-        <input name="address" placeholder="Masalan: Andijon viloyati, Asaka tumani, Shodlik ko’chasi, 6-uy">
+        <input name="address" placeholder="Andijon viloyati, Asaka tumani, Shodlik ko’chasi, 6-uy">
       `;
       container.appendChild(div);
     }
 
-
+    // Telegram ID URL query'dan olib, formga qo'yish
     const params = new URLSearchParams(window.location.search);
     const tgId = params.get("id");
     if (tgId) {
       const hiddenInput = document.getElementById('tg_id');
       if (hiddenInput) hiddenInput.value = tgId;
     }
-
+  
     async function submitForm() {
       const form = document.getElementById('resumeForm');
-      const formData = new FormData(form);  // Bu rasmni ham o'z ichiga oladi
-
+      const formData = new FormData(form);  // Rasm + matnlar
+  
+      // ✅ Yaqin qarindoshlarni array ko‘rinishida yig‘amiz
+      const relatives = [];
+      const relativesDivs = document.querySelectorAll('.relative');
+      relativesDivs.forEach(div => {
+        const relative = {
+          relation_type: div.querySelector('[name="relation_type"]').value,
+          full_name: div.querySelector('[name="relative_full_name"]').value,
+          b_year_place: div.querySelector('[name="b_year_place"]').value,
+          job_title: div.querySelector('[name="job_title"]').value,
+          address: div.querySelector('[name="address"]').value
+        };
+        relatives.push(relative);
+      });
+  
+      // ✅ JSON ko‘rinishga o‘tkazib, formData ga qo‘shamiz
+      formData.append("relatives", JSON.stringify(relatives));
+  
       try {
         const response = await fetch("/send_resume_data", {
           method: "POST",
-          body: formData // JSON emas, to'g'ridan-to'g'ri FormData yuboriladi
+          body: formData
         });
-
+  
         const result = await response.json();
         if (result.status === "success") {
           alert("✅ Ma’lumotlar muvaffaqiyatli yuborildi!");
@@ -156,7 +173,8 @@
         alert("❌ Serverga ulanishda xatolik: " + error.message);
       }
     }
-   
   </script>
+
+
 </body>
 </html>
