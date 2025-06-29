@@ -1,65 +1,79 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import UploadFile, Form
+from fastapi.responses import FileResponse
 
-from loader import bot
+from tempfile import NamedTemporaryFile
+import shutil
+import os
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from handlers.users.word import generate_resume_doc
-from handlers.users.start import user_data
+from loader import bot
 
 app = FastAPI()
 
-
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-
-templates = Jinja2Templates(directory="templates")
-
-
-@app.get("/", response_class=HTMLResponse)
-async def serve_form(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-
 @app.post("/send_resume_data")
-async def receive_resume(request: Request):
+async def receive_resume(
+    full_name: str = Form(...),
+    birth_date: str = Form(""),
+    birth_place: str = Form(""),
+    nationality: str = Form(""),
+    party_membership: str = Form(""),
+    education: str = Form(""),
+    university: str = Form(""),
+    specialization: str = Form(""),
+    ilmiy_daraja: str = Form(""),
+    ilmiy_unvon: str = Form(""),
+    languages: str = Form(""),
+    deputat: str = Form(""),
+    dav_mukofoti: str = Form(""),
+    work_experience: str = Form(""),
+    phone: str = Form(""),
+    tg_id: str = Form(""),
+    photo: UploadFile = None
+):
     try:
-        data = await request.json()
-        user_id = data.get("from_user", {}).get("id")
-        if not user_id:
-            return JSONResponse(content={"error": "User ID yo'q"}, status_code=400)
+        # ✅ Rasmni vaqtincha saqlaymiz
+        photo_path = None
+        if photo:
+            with NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+                shutil.copyfileobj(photo.file, tmp)
+                photo_path = tmp.name
 
-        user_data[user_id] = data  # vaqtincha saqlaymiz
+        # ✅ Ma’lumotlarni tayyorlaymiz
+        resume_dict = {
+            "full_name": full_name,
+            "birth_date": birth_date,
+            "birth_place": birth_place,
+            "nationality": nationality,
+            "party_membership": party_membership,
+            "education": education,
+            "university": university,
+            "specialization": specialization,
+            "ilmiy_daraja": ilmiy_daraja,
+            "ilmiy_unvon": ilmiy_unvon,
+            "languages": languages,
+            "deputat": deputat,
+            "dav_mukofoti": dav_mukofoti,
+            "work_experience": work_experience,
+            "phone": phone,
+            "photo_path": photo_path,
+            "from_user": {"id": tg_id}
+        }
 
-        await bot.send_message(user_id, "✅ Ma'lumotlar qabul qilindi.\n📸 Endi rasmni yuboring.")
-        return {"status": "waiting_for_photo"}
+        # ✅ Word faylni yaratamiz
+        docx_file = generate_resume_doc(resume_dict)
 
+        # ✅ Telegramga yuboramiz (agar xohlasangiz)
+        await bot.send_document(int(tg_id), open(docx_file, "rb"))
 
-        # data = await request.json()
-        # chat_id = data.get("from_user", {}).get("id")
-        #
-        # if not chat_id:
-        #     return JSONResponse(content={"error": "contact (Telegram ID) kerak"}, status_code=400)
-        #
-    #
-    #     # ✅ Matnli xabar tayyorlash
-    #     message = f"<b>📄 Yangi rezyume:</b>\n\n"
-    #     message += f"<b>Ism:</b> {data.get('full_name')}\n"
-    #     message += f"<b>Tug‘ilgan sana:</b> {data.get('birth_date')}\n"
-    #     message += f"<b>Mutaxassisligi:</b> {data.get('specialization')}\n"
-    #
-    #     if data.get("relatives"):
-    #         message += "\n<b>Yaqin qarindoshlari:</b>\n"
-    #         for idx, rel in enumerate(data["relatives"], 1):
-    #             message += f"{idx}. {rel.get('relation_type', '')}, {rel.get('full_name', '')}, {rel.get('b_year_place', '')}, {rel.get('job_title', '')}, {rel.get('address', '')}\n"
-    #
-    #     # ✅ Matnni yuborish
-    #     await bot.send_message(chat_id, message)
-    #
-    #     # ✅ Word faylni yaratish va yuborish
-    #     filename = generate_resume_doc(data)
-    #     with open(filename, "rb") as doc_file:
-    #         await bot.send_document(chat_id, doc_file)
-    #
-    #     return {"status": "success"}
-    #
+        # ✅ Foydalanuvchiga ham fayl qaytaramiz
+        return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+    finally:
+        # Fayllarni tozalash
+        if photo_path and os.path.exists(photo_path):
+            os.remove(photo_path)
+        if docx_file and os.path.exists(docx_file):
+            os.remove(docx_file)
