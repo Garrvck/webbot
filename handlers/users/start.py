@@ -15,7 +15,21 @@ user_data = {}  # user_id: resume_dict
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    await message.answer(f"Salom, {message.from_user.full_name}!")
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
+    tg_id = message.from_user.id
+    data = {
+        "menu_button": {
+            "type": "web_app",
+            "text": "📄 Mening Sahifam",
+            "web_app": {
+                "url": f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"  # bu yerga web sahifa linkini qo'ying
+            }
+        }
+    }
+
+    response = requests.post(url, json=data)
+    print(response.json())
+    await message.answer(f"Ma'lumotnoma tayyorlash botiga xush kelibsiz!")
 
 @dp.message_handler(Command("start_resume"))
 async def start_resume_handler(message: types.Message):
