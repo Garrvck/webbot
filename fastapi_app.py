@@ -17,6 +17,15 @@ from utils.notify_admins import on_startup_notify
 from utils.set_bot_commands import set_default_commands
 
 app = FastAPI()
+from fastapi.templating import Jinja2Templates
+from fastapi.requests import Request
+from fastapi.responses import HTMLResponse
+
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+async def serve_form(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/send_resume_data")
