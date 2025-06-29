@@ -87,9 +87,9 @@ async def receive_resume(
 
         # ✅ Telegramga yuboramiz
         await bot.send_document(int(tg_id), open(docx_file, "rb"))
-
-        # ✅ Foydalanuvchiga ham faylni qaytaramiz
-        return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        return {"status": "success"}
+        # # ✅ Foydalanuvchiga ham faylni qaytaramiz
+        # return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
