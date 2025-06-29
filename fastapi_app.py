@@ -14,7 +14,7 @@ import threading  # ✅ botni fon rejimida ishlatish uchun
 from aiogram import executor
 from loader import dp
 from utils.notify_admins import on_startup_notify
-from utils.set_bot_commands import set_default_commands
+# from utils.set_bot_commands import set_default_commands
 import json
 app = FastAPI()
 
@@ -103,7 +103,7 @@ async def receive_resume(
 # ✅ Telegram botni fon rejimida ishga tushiramiz
 def start_bot():
     async def on_startup(dispatcher):
-        await set_default_commands(dispatcher)
+        # await set_default_commands(dispatcher)
         await on_startup_notify(dispatcher)
 
     executor.start_polling(dp, on_startup=on_startup)
