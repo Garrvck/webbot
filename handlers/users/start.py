@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters import Command
 from handlers.users.word import generate_resume_doc
 from loader import dp
 from data.config import BOT_TOKEN
-
+import requests
 
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
