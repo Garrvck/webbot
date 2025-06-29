@@ -15,8 +15,10 @@ from aiogram import executor
 from loader import dp
 from utils.notify_admins import on_startup_notify
 from utils.set_bot_commands import set_default_commands
-
+import json
 app = FastAPI()
+
+
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
@@ -46,6 +48,7 @@ async def receive_resume(
     work_experience: str = Form(""),
     phone: str = Form(""),
     tg_id: str = Form(""),
+    relatives: str = Form(...),   # bu JSON formatdagi string
     photo: UploadFile = None
 ):
     try:
@@ -56,6 +59,7 @@ async def receive_resume(
                 shutil.copyfileobj(photo.file, tmp)
                 photo_path = tmp.name
 
+        relatives_list = json.loads(relatives)  # str → list[dict]
         # ✅ Ma’lumotlarni tayyorlaymiz
         resume_dict = {
             "full_name": full_name,
@@ -74,7 +78,8 @@ async def receive_resume(
             "work_experience": work_experience,
             "phone": phone,
             "photo_path": photo_path,
-            "from_user": {"id": tg_id}
+            "from_user": {"id": tg_id},
+            "relatives": relatives_list
         }
 
         # ✅ Word faylni yaratamiz
