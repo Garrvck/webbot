@@ -1,15 +1,23 @@
-from fastapi import UploadFile, Form
-from fastapi.responses import FileResponse
+from fastapi import UploadFile, Form, FastAPI
+from fastapi.responses import FileResponse, JSONResponse
 
 from tempfile import NamedTemporaryFile
 import shutil
 import os
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+
 from handlers.users.word import generate_resume_doc
 from loader import bot
 
+import uvicorn  # ✅ kerak
+import threading  # ✅ botni fon rejimida ishlatish uchun
+
+from aiogram import executor
+from loader import dp
+from utils.notify_admins import on_startup_notify
+from utils.set_bot_commands import set_default_commands
+
 app = FastAPI()
+
 
 @app.post("/send_resume_data")
 async def receive_resume(
@@ -63,17 +71,32 @@ async def receive_resume(
         # ✅ Word faylni yaratamiz
         docx_file = generate_resume_doc(resume_dict)
 
-        # ✅ Telegramga yuboramiz (agar xohlasangiz)
+        # ✅ Telegramga yuboramiz
         await bot.send_document(int(tg_id), open(docx_file, "rb"))
 
-        # ✅ Foydalanuvchiga ham fayl qaytaramiz
+        # ✅ Foydalanuvchiga ham faylni qaytaramiz
         return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
     finally:
-        # Fayllarni tozalash
         if photo_path and os.path.exists(photo_path):
             os.remove(photo_path)
-        if docx_file and os.path.exists(docx_file):
+        if 'docx_file' in locals() and os.path.exists(docx_file):
             os.remove(docx_file)
+
+
+# ✅ Telegram botni fon rejimida ishga tushiramiz
+def start_bot():
+    async def on_startup(dispatcher):
+        await set_default_commands(dispatcher)
+        await on_startup_notify(dispatcher)
+
+    executor.start_polling(dp, on_startup=on_startup)
+
+
+# ✅ Heroku uchun web-serverni ishga tushiramiz
+if __name__ == "__main__":
+    threading.Thread(target=start_bot).start()
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("fastapi_app:app", host="0.0.0.0", port=port)
