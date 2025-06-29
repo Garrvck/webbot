@@ -136,48 +136,14 @@
       if (hiddenInput) hiddenInput.value = tgId;
     }
 
-
     async function submitForm() {
       const form = document.getElementById('resumeForm');
-      const formData = new FormData(form);
-      const data = {
-        full_name: formData.get('full_name'),
-        birth_date: formData.get('birth_date'),
-        birth_place: formData.get('birth_place'),
-        nationality: formData.get('nationality'),
-        party_membership: formData.get('party_membership'),
-        education: formData.get('education'),
-        university: formData.get('university'),
-        specialization: formData.get('specialization'),
-        ilmiy_daraja: formData.get('ilmiy_daraja'),
-        ilmiy_unvon: formData.get('ilmiy_unvon'),
-        languages: formData.get('languages'),
-        deputat: formData.get('deputat'),
-        dav_mukofoti: formData.get('dav_mukofoti'),
-        work_experience: formData.get('work_experience'),
-        phone: formData.get('phone'),    // Telefon raqami (foydalanuvchi kiritadi)
-        photo_path: formData.get('photo')?.name || 'Yuklanmagan',
-        from_user: { id: formData.get('tg_id') },  // Telegram ID (botdan keladi)
-        relatives: []
-      };
-
-      const relativesDivs = document.querySelectorAll('.relative');
-      relativesDivs.forEach(div => {
-        const relative = {
-          relation_type: div.querySelector('[name="relation_type"]').value,
-          full_name: div.querySelector('[name="relative_full_name"]').value,
-          b_year_place: div.querySelector('[name="b_year_place"]').value,
-          job_title: div.querySelector('[name="job_title"]').value,
-          address: div.querySelector('[name="address"]').value
-        };
-        data.relatives.push(relative);
-      });
+      const formData = new FormData(form);  // Bu rasmni ham o'z ichiga oladi
 
       try {
         const response = await fetch("/send_resume_data", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(data)
+          body: formData // JSON emas, to'g'ridan-to'g'ri FormData yuboriladi
         });
 
         const result = await response.json();
@@ -190,6 +156,7 @@
         alert("❌ Serverga ulanishda xatolik: " + error.message);
       }
     }
+   
   </script>
 </body>
 </html>
