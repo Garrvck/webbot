@@ -20,7 +20,7 @@ async def bot_start(message: types.Message):
     data = {
         "menu_button": {
             "type": "web_app",
-            "text": "📄 Mening Sahifam",
+            "text": "📄 Ma'lumotnoma",
             "web_app": {
                 "url": f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"  # bu yerga web sahifa linkini qo'ying
             }
