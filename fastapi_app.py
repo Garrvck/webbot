@@ -1,22 +1,28 @@
 from fastapi import UploadFile, Form, FastAPI
 from fastapi.responses import FileResponse, JSONResponse
+
 from tempfile import NamedTemporaryFile
 import shutil
 import os
+
 from handlers.users.word import generate_resume_doc
 from loader import bot
+
 import uvicorn  # ✅ kerak
 import threading  # ✅ botni fon rejimida ishlatish uchun
+
 from aiogram import executor
 from loader import dp
 from utils.notify_admins import on_startup_notify
+# from utils.set_bot_commands import set_default_commands
 import json
+app = FastAPI()
+
+
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 from PIL import Image, ExifTags
-
-app = FastAPI()
 
 def fix_image_orientation(image_path):
     try:
@@ -63,6 +69,7 @@ async def receive_resume(
     languages: str = Form(""),
     dav_mukofoti: str = Form(""),
     deputat: str = Form(""),
+    adresss: str = Form(""), # Yangi qator
     work_experience: str = Form(""),
     phone: str = Form(""),
     tg_id: str = Form(""),
@@ -93,6 +100,7 @@ async def receive_resume(
             "languages": languages,
             "dav_mukofoti": dav_mukofoti,
             "deputat": deputat,
+            "adresss": adresss,
             "work_experience": work_experience,
             "phone": phone,
             "photo_path": photo_path,
