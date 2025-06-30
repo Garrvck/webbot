@@ -76,22 +76,24 @@
       <input name="ilmiy_unvon" id="ilmiy_unvon" placeholder="Dotsent, professor yoki Yo‘q">
       <span class="yoq-btn" onclick="document.getElementById('ilmiy_unvon').value='Yo‘q'">Yo‘q</span>
 
-      <label>Biladigan tillari</label>
-      <input name="languages" placeholder="Masalan: O‘zbek, Rus, Ingliz">
+      <label>Qaysi chet tillarini biladi:</label>
+      <input name="languages" placeholder="Masalan: Rus tili, Ingliz tili">
 
-      <label>Deputatlik holati</label>
-      <input name="deputat" id="deputat" placeholder="Deputat yoki Yo‘q">
-      <span class="yoq-btn" onclick="document.getElementById('deputat').value='Yo‘q'">Yo‘q</span>
-
-      <label>Davlat mukofotlari</label>
-      <input name="dav_mukofoti" id="dav_mukofoti" placeholder="Mukofot nomi yoki Yo‘q">
+      <label>Davlat mukofatlari bilan taqdirlanganmi (qanaqa):</label>
+      <input name="dav_mukofoti" id="dav_mukofoti">
       <span class="yoq-btn" onclick="document.getElementById('dav_mukofoti').value='Yo‘q'">Yo‘q</span>
 
+      <label>Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim)</label>
+      <input name="deputat" id="deputat">
+      <span class="yoq-btn" onclick="document.getElementById('deputat').value='Yo‘q'">Yo‘q</span>
+
+
+
       <label>Mehnat faoliyati</label>
-      <textarea name="work_experience" placeholder="Masalan: 2015-2020 - O‘qituvchi, Toshkent sh."></textarea>
+      <textarea name="work_experience" placeholder="Masalan: 2015-2020 - yillar. Toshkent sh. 1-maktabda O‘qituvchi, "></textarea>
 
       <label>Telefon raqami</label>
-      <input type="text" name="phone" placeholder="Masalan: +998901234567" required>
+      <input type="text" name="phone" placeholder="+998901234567" required>
 
       <input type="hidden" name="tg_id" id="tg_id">
 
@@ -135,11 +137,11 @@
       const hiddenInput = document.getElementById('tg_id');
       if (hiddenInput) hiddenInput.value = tgId;
     }
-  
+
     async function submitForm() {
       const form = document.getElementById('resumeForm');
       const formData = new FormData(form);  // Rasm + matnlar
-  
+
       // ✅ Yaqin qarindoshlarni array ko‘rinishida yig‘amiz
       const relatives = [];
       const relativesDivs = document.querySelectorAll('.relative');
@@ -153,16 +155,16 @@
         };
         relatives.push(relative);
       });
-  
+
       // ✅ JSON ko‘rinishga o‘tkazib, formData ga qo‘shamiz
       formData.append("relatives", JSON.stringify(relatives));
-  
+
       try {
         const response = await fetch("/send_resume_data", {
           method: "POST",
           body: formData
         });
-  
+
         const result = await response.json();
         if (result.status === "success") {
           alert("✅ Ma’lumotnoma tayyor.\n\n✅ Chatda yuborildi!");
