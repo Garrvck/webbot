@@ -112,7 +112,7 @@ async def receive_resume(
         docx_file = generate_resume_doc(resume_dict)
 
         # ✅ Telegramga yuboramiz
-        await bot.send_document(int(tg_id), open(docx_file, "rb"))
+        await bot.send_document(int(tg_id), open(docx_file, "rb"), caption="✅ Sizning rezyume faylingiz tayyor!")
 
         return {"status": "success"}
         # # ✅ Foydalanuvchiga ham faylni qaytaramiz
