@@ -1,27 +1,45 @@
 from fastapi import UploadFile, Form, FastAPI
 from fastapi.responses import FileResponse, JSONResponse
-
 from tempfile import NamedTemporaryFile
 import shutil
 import os
-
 from handlers.users.word import generate_resume_doc
 from loader import bot
-
 import uvicorn  # ✅ kerak
 import threading  # ✅ botni fon rejimida ishlatish uchun
-
 from aiogram import executor
 from loader import dp
 from utils.notify_admins import on_startup_notify
-# from utils.set_bot_commands import set_default_commands
 import json
-app = FastAPI()
-
-
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
+from PIL import Image, ExifTags
+
+app = FastAPI()
+
+def fix_image_orientation(image_path):
+    try:
+        image = Image.open(image_path)
+
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+
+        exif = image._getexif()
+        if exif is not None:
+            orientation_value = exif.get(orientation)
+
+            if orientation_value == 3:
+                image = image.rotate(180, expand=True)
+            elif orientation_value == 6:
+                image = image.rotate(270, expand=True)
+            elif orientation_value == 8:
+                image = image.rotate(90, expand=True)
+
+            image.save(image_path)
+    except Exception as e:
+        print("❌ Rasmni oriyentatsiyasini to'g'rilashda xatolik:", e)
 
 templates = Jinja2Templates(directory="templates")
 
@@ -58,7 +76,7 @@ async def receive_resume(
             with NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
                 shutil.copyfileobj(photo.file, tmp)
                 photo_path = tmp.name
-
+            fix_image_orientation(photo_path)
         relatives_list = json.loads(relatives)  # str → list[dict]
         # ✅ Ma’lumotlarni tayyorlaymiz
         resume_dict = {
