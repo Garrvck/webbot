@@ -20,6 +20,7 @@ import requests
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     tg_id = message.from_user.id
+    await message.answer("👋 Assalomu alaykum!", reply_markup=ReplyKeyboardRemove())
     url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
 
     # Inline tugma orqali rezyume yuborish
@@ -42,7 +43,7 @@ async def bot_start(message: types.Message):
 
     # Xabar yuboramiz
     await message.answer(
-        "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
+        "📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
         reply_markup=keyboard
     )
 
