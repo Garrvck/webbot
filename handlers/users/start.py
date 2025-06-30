@@ -20,33 +20,22 @@ import requests
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     tg_id = message.from_user.id
-    await message.answer("👋 Assalomu alaykum!", reply_markup=ReplyKeyboardRemove())
-    url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
-    requests.post(url, json={"menu_button": {"type": "default"}})
-    # Inline tugma orqali rezyume yuborish
+    webapp_url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
+
+    # ✅ Telegram chap menyudagi WebApp tugmasini olib tashlash
+    menu_clear_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
+    requests.post(menu_clear_url, json={"menu_button": {"type": "default"}})
+
+    # ✅ Inline tugma (chat ichida)
     keyboard = InlineKeyboardMarkup().add(
-        InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=url))
+        InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=webapp_url))
     )
 
-    # # Chat menyusiga ham Web App tugmasi qo‘shamiz
-    # set_menu_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
-    # data = {
-    #     "menu_button": {
-    #         "type": "web_app",
-    #         "text": "📄 Ma'lumotnoma",
-    #         "web_app": {
-    #             "url": url
-    #         }
-    #     }
-    # }
-    # requests.post(set_menu_url, json=data)
-
-    # Xabar yuboramiz
+    # ✅ Xabar yuborish
     await message.answer(
-        "📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
+        "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
         reply_markup=keyboard
     )
-
 
 # @dp.message_handler(Command("start_resume"))
 # async def start_resume_handler(message: types.Message):
