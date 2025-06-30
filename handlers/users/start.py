@@ -27,18 +27,18 @@ async def bot_start(message: types.Message):
         InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=url))
     )
 
-    # Chat menyusiga ham Web App tugmasi qo‘shamiz
-    set_menu_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
-    data = {
-        "menu_button": {
-            "type": "web_app",
-            "text": "📄 Ma'lumotnoma",
-            "web_app": {
-                "url": url
-            }
-        }
-    }
-    requests.post(set_menu_url, json=data)
+    # # Chat menyusiga ham Web App tugmasi qo‘shamiz
+    # set_menu_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
+    # data = {
+    #     "menu_button": {
+    #         "type": "web_app",
+    #         "text": "📄 Ma'lumotnoma",
+    #         "web_app": {
+    #             "url": url
+    #         }
+    #     }
+    # }
+    # requests.post(set_menu_url, json=data)
 
     # Xabar yuboramiz
     await message.answer(
@@ -47,9 +47,9 @@ async def bot_start(message: types.Message):
     )
 
 
-@dp.message_handler(Command("start_resume"))
-async def start_resume_handler(message: types.Message):
-    tg_id = message.from_user.id
-    url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
-    await message.answer(f"👇 Rezyume to‘ldirish uchun sahifani oching:\n{url}", reply_markup=ReplyKeyboardRemove())
+# @dp.message_handler(Command("start_resume"))
+# async def start_resume_handler(message: types.Message):
+#     tg_id = message.from_user.id
+#     url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
+#     await message.answer(f"👇 Rezyume to‘ldirish uchun sahifani oching:\n{url}", reply_markup=ReplyKeyboardRemove())
 
