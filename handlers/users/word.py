@@ -76,16 +76,11 @@ def generate_resume_doc(resume: dict):
         merged_cell.paragraphs[0].add_run("[Rasm]")
 
 
-
-
-    # merged_cell = table.cell(0, 1).merge(table.cell(2, 1))
-    # merged_cell.paragraphs[0].add_run("[Rasm]")  # Agar rasm yuklanmasa
-
     doc.add_paragraph("")
-    doc.add_paragraph("")
+
 
     # 2-jadval: foydalanuvchi ma'lumotlari
-    table = doc.add_table(rows=6, cols=2)
+    table = doc.add_table(rows=5, cols=2)
     hide_borders(table)
 
     data = [
@@ -93,14 +88,46 @@ def generate_resume_doc(resume: dict):
         [("Millati:\n", resume.get("nationality", "")), ("Partiyaviyligi:\n", resume.get("party_membership", ""))],
         [("Ma’lumoti:\n", resume.get("education", "")), ("Tamomlagan:\n", resume.get("university", ""))],
         [("Ma’lumoti bo‘yicha mutaxassisligi:\n", resume.get("specialization", "")), ("Ilmiy daraja:\n", resume.get("ilmiy_daraja", ""))],
-        [("Ilmiy unvon:\n", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:\n", resume.get("languages", ""))],
-        [("Davlat mukofatlari bilan taqdirlanganmi (qanaqa):", resume.get("dav_mukofoti", "")), ("Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim):", resume.get("deputat", ""))]
+        [("Ilmiy unvon:\n", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:\n", resume.get("languages", ""))]
     ]
 
     for row_idx, row_data in enumerate(data):
         for col_idx, (label, value) in enumerate(row_data):
             p = table.cell(row_idx, col_idx).paragraphs[0]
             add_field(p, label, value)
+
+    table = doc.add_table(rows=3, cols=1)
+    hide_borders(table)
+
+    data = [
+        [("Davlat mukofatlari bilan taqdirlanganmi (qanaqa):", resume.get("dav_mukofoti", ""))],
+        [("Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim):", resume.get("deputat", ""))],
+        [("Doimiy yashash manzili (aniq ko'rsatilsin):", resume.get("adresss", ""))],
+    ]
+
+    for row_idx, row_data in enumerate(data):
+        for col_idx, (label, value) in enumerate(row_data):
+            p = table.cell(row_idx, col_idx).paragraphs[0]
+            add_field(p, label, value)
+
+
+    # # 2-jadval: foydalanuvchi ma'lumotlari
+    # table = doc.add_table(rows=6, cols=2)
+    # hide_borders(table)
+    #
+    # data = [
+    #     [("Tug‘ilgan yili:\n", resume.get("birth_date", "")), ("Tug‘ilgan joyi:\n", resume.get("birth_place", ""))],
+    #     [("Millati:\n", resume.get("nationality", "")), ("Partiyaviyligi:\n", resume.get("party_membership", ""))],
+    #     [("Ma’lumoti:\n", resume.get("education", "")), ("Tamomlagan:\n", resume.get("university", ""))],
+    #     [("Ma’lumoti bo‘yicha mutaxassisligi:\n", resume.get("specialization", "")), ("Ilmiy daraja:\n", resume.get("ilmiy_daraja", ""))],
+    #     [("Ilmiy unvon:\n", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:\n", resume.get("languages", ""))],
+    #     [("Davlat mukofatlari bilan taqdirlanganmi (qanaqa):", resume.get("dav_mukofoti", "")), ("Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim):", resume.get("deputat", ""))]
+    # ]
+    #
+    # for row_idx, row_data in enumerate(data):
+    #     for col_idx, (label, value) in enumerate(row_data):
+    #         p = table.cell(row_idx, col_idx).paragraphs[0]
+    #         add_field(p, label, value)
 
     doc.add_paragraph("")
 
