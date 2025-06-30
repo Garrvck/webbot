@@ -22,7 +22,7 @@ async def bot_start(message: types.Message):
     tg_id = message.from_user.id
     await message.answer("👋 Assalomu alaykum!", reply_markup=ReplyKeyboardRemove())
     url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
-
+    requests.post(url, json={"menu_button": {"type": "default"}})
     # Inline tugma orqali rezyume yuborish
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=url))
