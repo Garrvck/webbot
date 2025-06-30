@@ -89,12 +89,12 @@ def generate_resume_doc(resume: dict):
     hide_borders(table)
 
     data = [
-        [("Tug‘ilgan yili:", resume.get("birth_date", "")), ("Tug‘ilgan joyi:", resume.get("birth_place", ""))],
-        [("Millati:", resume.get("nationality", "")), ("Partiyaviyligi:", resume.get("party_membership", ""))],
-        [("Ma’lumoti:", resume.get("education", "")), ("Tamomlagan:", resume.get("university", ""))],
-        [("Ma’lumoti bo‘yicha mutaxassisligi:", resume.get("specialization", "")), ("Ilmiy daraja:", resume.get("ilmiy_daraja", ""))],
-        [("Ilmiy unvon:", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:", resume.get("languages", ""))],
-        [("Saylanadigan organlar a’zoligi:", resume.get("deputat", "")), ("Davlat mukofotlari:", resume.get("dav_mukofoti", ""))]
+        [("Tug‘ilgan yili:\n", resume.get("birth_date", "")), ("Tug‘ilgan joyi:\n", resume.get("birth_place", ""))],
+        [("Millati:\n", resume.get("nationality", "")), ("Partiyaviyligi:\n", resume.get("party_membership", ""))],
+        [("Ma’lumoti:\n", resume.get("education", "")), ("Tamomlagan:\n", resume.get("university", ""))],
+        [("Ma’lumoti bo‘yicha mutaxassisligi:\n", resume.get("specialization", "")), ("Ilmiy daraja:\n", resume.get("ilmiy_daraja", ""))],
+        [("Ilmiy unvon:\n", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:\n", resume.get("languages", ""))],
+        [("Davlat mukofatlari bilan taqdirlanganmi (qanaqa):", resume.get("dav_mukofoti", "")), ("Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim):", resume.get("deputat", ""))]
     ]
 
     for row_idx, row_data in enumerate(data):
