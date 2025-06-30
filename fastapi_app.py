@@ -73,8 +73,8 @@ async def receive_resume(
             "ilmiy_daraja": ilmiy_daraja,
             "ilmiy_unvon": ilmiy_unvon,
             "languages": languages,
-            "deputat": deputat,
             "dav_mukofoti": dav_mukofoti,
+            "deputat": deputat,
             "work_experience": work_experience,
             "phone": phone,
             "photo_path": photo_path,
@@ -87,6 +87,7 @@ async def receive_resume(
 
         # ✅ Telegramga yuboramiz
         await bot.send_document(int(tg_id), open(docx_file, "rb"))
+
         return {"status": "success"}
         # # ✅ Foydalanuvchiga ham faylni qaytaramiz
         # return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
