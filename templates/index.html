@@ -170,6 +170,10 @@
         const result = await response.json();
         if (result.status === "success") {
           alert("✅ Ma’lumotnoma tayyor.\n\n✅ Chatda yuborildi!");
+          // ✅ Telegram Web App ni yopish
+          if (window.Telegram && Telegram.WebApp) {
+          Telegram.WebApp.close();
+          }
         } else {
           alert("❌ Xatolik: " + result.error);
         }
