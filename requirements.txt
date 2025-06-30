@@ -11,3 +11,4 @@ typing-extensions
 uvicorn[standard]
 python-multipart
 requests>=2.25.1
+Pillow
