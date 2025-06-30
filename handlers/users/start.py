@@ -13,23 +13,39 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeybo
 
 user_data = {}  # user_id: resume_dict
 
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from aiogram.dispatcher.filters import CommandStart
+import requests
+
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
     tg_id = message.from_user.id
+    url = f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"
+
+    # Inline tugma orqali rezyume yuborish
+    keyboard = InlineKeyboardMarkup().add(
+        InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=url))
+    )
+
+    # Chat menyusiga ham Web App tugmasi qo‘shamiz
+    set_menu_url = f"https://api.telegram.org/bot{BOT_TOKEN}/setChatMenuButton"
     data = {
         "menu_button": {
             "type": "web_app",
             "text": "📄 Ma'lumotnoma",
             "web_app": {
-                "url": f"https://resume-bot-cfc4560e271d.herokuapp.com/?id={tg_id}"  # bu yerga web sahifa linkini qo'ying
+                "url": url
             }
         }
     }
+    requests.post(set_menu_url, json=data)
 
-    response = requests.post(url, json=data)
-    print(response.json())
-    await message.answer(f"Ma'lumotnoma tayyorlash botiga xush kelibsiz!")
+    # Xabar yuboramiz
+    await message.answer(
+        "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
+        reply_markup=keyboard
+    )
+
 
 @dp.message_handler(Command("start_resume"))
 async def start_resume_handler(message: types.Message):
