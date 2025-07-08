@@ -160,7 +160,7 @@ def generate_resume_doc(resume: dict):
     doc.add_page_break()
 
     # Yaqin qarindoshlar
-    p = doc.add_paragraph(resume["full_name"], "ning yaqin qarindoshlari haqida ma'lumot")
+    p = doc.add_paragraph(f"{resume["full_name"]}ning yaqin qarindoshlari haqida ma'lumot")
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.runs[0]
     run.bold = True
