@@ -160,7 +160,7 @@ def generate_resume_doc(resume: dict):
     doc.add_page_break()
 
     # Yaqin qarindoshlar
-    p = doc.add_paragraph("Yaqin qarindoshlari haqida ma'lumot")
+    p = doc.add_paragraph(resume["full_name"], "ning yaqin qarindoshlari haqida ma'lumot")
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.runs[0]
     run.bold = True
@@ -171,7 +171,7 @@ def generate_resume_doc(resume: dict):
     table = doc.add_table(rows=len(relatives) + 1, cols=5)
     table.style = 'Table Grid'
 
-    headers = ["Yaqinlik darajasi", "F.I.Sh", "Tug‘ilgan sanasi", "Ish joyi va lavozimi", "Yashash manzili"]
+    headers = ["Qarindoshligi", "F.I.Sh", "Tug‘ilgan yili va joyi", "Ish joyi va lavozimi", "Doimiy yashash manzili"]
     col_widths = [Cm(2.2), Cm(6.3), Cm(4), Cm(5), Cm(5)]
 
     for idx, (header, width) in enumerate(zip(headers, col_widths)):
