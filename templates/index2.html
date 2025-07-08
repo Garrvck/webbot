@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezyume shakli</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      position: relative;
+    }
+    h2, h3 { text-align: center; color: #333; }
+    label { font-weight: 600; margin-bottom: 5px; display: block; color: #333; }
+    input, textarea, select, button {
+      width: 100%; padding: 10px; border-radius: 8px;
+      border: 1px solid #ccc; font-size: 16px;
+    }
+    button {
+      background-color: #007bff; color: white; border: none;
+      cursor: pointer; font-weight: bold; margin-top: 20px;
+    }
+    button:hover { background-color: #0056b3; }
+    .yoq-btn {
+      margin-top: 5px; background-color: #e0e0e0;
+      padding: 6px 12px; cursor: pointer; display: inline-block;
+      border-radius: 6px; margin-right: 10px; font-size: 14px;
+    }
+    .section {
+      margin-bottom: 30px; border-bottom: 1px solid #ddd;
+      padding-bottom: 20px; background: white; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .form-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .form-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .relative {
+      border: 1px dashed #aaa; padding: 15px; margin-top: 15px;
+      border-radius: 8px; background-color: #f0f0f0;
+    }
+    .photo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 120px;
+    }
+    .photo img {
+      width: 100%; border-radius: 8px; border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>MA’LUMOTNOMA</h2>
+  <form id="resumeForm">
+    <div class="photo">
+      <img id="photoPreview" src="#" alt="Rasm" style="display:none;">
+    </div>
+
+    <div class="section">
+      <label>To‘liq F.I.SH</label>
+      <input name="full_name" required>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>Tug‘ilgan yili</label>
+          <input name="birth_date" type="date">
+        </div>
+        <div class="form-col">
+          <label>Tug‘ilgan joyi</label>
+          <input name="birth_place">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>Millati</label>
+          <input name="nationality">
+        </div>
+        <div class="form-col">
+          <label>Partiyaviyligi</label>
+          <input name="party_membership">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>Ma’lumoti</label>
+          <input name="education">
+        </div>
+        <div class="form-col">
+          <label>Tamomlagan</label>
+          <input name="university">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>Mutaxassisligi</label>
+          <input name="specialization">
+        </div>
+        <div class="form-col">
+          <label>Ilmiy daraja</label>
+          <input name="ilmiy_daraja">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label>Ilmiy unvon</label>
+          <input name="ilmiy_unvon">
+        </div>
+        <div class="form-col">
+          <label>Chet tillari</label>
+          <input name="languages">
+        </div>
+      </div>
+
+      <label>Davlat mukofotlari bilan taqdirlanganmi (qanaqa)</label>
+      <input name="dav_mukofoti">
+
+      <label>Deputatlik holati (to‘liq ko‘rsatilishi lozim)</label>
+      <input name="deputat">
+
+      <label>Doimiy yashash manzili</label>
+      <input name="adresss">
+
+      <label>Mehnat faoliyati</label>
+      <textarea name="work_experience"></textarea>
+
+      <label>Telefon raqami</label>
+      <input name="phone" required>
+
+      <label>Rasm yuklash</label>
+      <input type="file" name="photo" id="photo" onchange="previewPhoto(event)">
+      <input type="hidden" name="tg_id" id="tg_id">
+    </div>
+
+    <div class="section">
+      <h3>Yaqin qarindoshlar</h3>
+      <div id="relatives"></div>
+      <button type="button" onclick="addRelative()">+ Qarindosh qo‘shish</button>
+    </div>
+
+    <button type="button" onclick="submitForm()">Tayyor</button>
+  </form>
+
+  <script>
+    function previewPhoto(event) {
+      const preview = document.getElementById('photoPreview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = 'block';
+    }
+    function addRelative() {
+      const container = document.getElementById('relatives');
+      const div = document.createElement('div');
+      div.className = 'relative';
+      div.innerHTML = `
+        <label>Qarindoshligi</label>
+        <input name="relation_type">
+        <label>F.I.O.</label>
+        <input name="relative_full_name">
+        <label>Tug‘ilgan yili va joyi</label>
+        <input name="b_year_place">
+        <label>Ish joyi va lavozimi</label>
+        <input name="job_title">
+        <label>Yashash joyi</label>
+        <input name="address">
+      `;
+      container.appendChild(div);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const tgId = params.get("id");
+    if (tgId) document.getElementById("tg_id").value = tgId;
+
+    async function submitForm() {
+      const form = document.getElementById('resumeForm');
+      const formData = new FormData(form);
+
+      const relatives = [];
+      document.querySelectorAll('.relative').forEach(div => {
+        relatives.push({
+          relation_type: div.querySelector('[name="relation_type"]').value,
+          full_name: div.querySelector('[name="relative_full_name"]').value,
+          b_year_place: div.querySelector('[name="b_year_place"]').value,
+          job_title: div.querySelector('[name="job_title"]').value,
+          address: div.querySelector('[name="address"]').value
+        });
+      });
+      formData.append("relatives", JSON.stringify(relatives));
+
+      const res = await fetch("/send_resume_data", {
+        method: "POST",
+        body: formData
+      });
+      const result = await res.json();
+      if (result.status === "success") {
+        alert("✅ Ma’lumotnoma tayyor.");
+        Telegram.WebApp?.close();
+      } else {
+        alert("❌ Xatolik: " + result.error);
+      }
+    }
+  </script>
+</body>
+</html>
