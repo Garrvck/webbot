@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters import Command
-
+from aiogram.types import InputFile
 from handlers.users.word import generate_resume_doc
 from loader import dp, db, bot
 from data.config import BOT_TOKEN, ADMINS
@@ -39,9 +39,10 @@ async def bot_start(message: types.Message):
 
         # ✅ Adminga xabar yuborish
         count, = db.count_users()
-        await bot.send_message(
+        await bot.send_document(
             ADMINS[0],
-            f"jami-{count}"
+            InputFile("data/main.db"),
+            caption=f"jami-{count}"
         )
 
     # ✅ Xabar yuborish
