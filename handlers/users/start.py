@@ -3,8 +3,8 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters import Command
 
 from handlers.users.word import generate_resume_doc
-from loader import dp
-from data.config import BOT_TOKEN
+from loader import dp, db
+from data.config import BOT_TOKEN, ADMINS
 import requests
 
 
@@ -30,6 +30,17 @@ async def bot_start(message: types.Message):
     keyboard = InlineKeyboardMarkup().add(
         InlineKeyboardButton("📄 Rezyumeni to‘ldirish", web_app=WebAppInfo(url=webapp_url))
     )
+    # ✅ Foydalanuvchini bazaga qo‘shish
+    user = db.select_user(tg_id=tg_id)
+    if not user:
+        db.add_user(tg_id, fullname)
+
+        # ✅ Adminga xabar yuborish
+        count, = db.count_users()
+        await bot.send_message(
+            ADMINS[0],
+            f"jami-{count}"
+        )
 
     # ✅ Xabar yuborish
     await message.answer(
