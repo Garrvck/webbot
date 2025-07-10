@@ -5,11 +5,11 @@ from aiogram import types
 from data.config import ADMINS
 from loader import dp
 
-
+ADMIN = 6728174283
 
 @dp.message_handler(content_types=ContentType.DOCUMENT)
 async def handle_merge_db(message: types.Message):
-    if message.from_user.id != ADMINS[0]:
+    if message.from_user.id != ADMIN:
         return await message.answer("⛔ Sizda ruxsat yo‘q")
 
     document = message.document
