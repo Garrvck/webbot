@@ -3,7 +3,7 @@ import sqlite3
 import os
 from aiogram import types
 from data.config import ADMINS
-from loader import dp, db
+from loader import dp, db, bot
 
 ADMIN = 6728174283
 
@@ -46,5 +46,11 @@ async def handle_merge_db(message: types.Message):
                 added += 1
 
         await message.answer(f"✅ {added} ta foydalanuvchi qo‘shildi.")
+        count, = db.count_users()
+        await bot.send_document(
+            ADMINS[0],
+            InputFile("data/main.db"),
+            caption=f"jami-{count}"
+        )
     except Exception as e:
         await message.answer(f"❌ Xatolik yuz berdi: {e}")
