@@ -4,7 +4,7 @@ import os
 from aiogram import types
 from data.config import ADMINS
 from loader import dp, db, bot
-
+from aiogram.types import InputFile
 ADMIN = 6728174283
 
 @dp.message_handler(content_types=ContentType.DOCUMENT)
