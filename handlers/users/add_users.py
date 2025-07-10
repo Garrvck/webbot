@@ -3,7 +3,7 @@ import sqlite3
 import os
 from aiogram import types
 from data.config import ADMINS
-from loader import dp
+from loader import dp, db
 
 ADMIN = 6728174283
 
