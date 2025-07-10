@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.filters import Command
 
 from handlers.users.word import generate_resume_doc
-from loader import dp, db
+from loader import dp, db, bot
 from data.config import BOT_TOKEN, ADMINS
 import requests
 
