@@ -44,7 +44,17 @@ async def bot_start(message: types.Message):
             InputFile("data/main.db"),
             caption=f"jami-{count}"
         )
+    try:
+        photo1 = InputFile("data/pic1.jpg")
+        await message.answer_photo(photo1)
+    except:
+        pass
 
+    try:
+        photo2 = InputFile("data/pic2.jpg")
+        await message.answer_photo(photo2)
+    except:
+        pass
     # ✅ Xabar yuborish
     await message.answer(
         "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
