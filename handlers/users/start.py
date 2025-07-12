@@ -57,7 +57,7 @@ async def bot_start(message: types.Message):
         pass
     # ✅ Xabar yuborish
     await message.answer(
-        "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma) to‘ldirish uchun tugmani bosing:",
+        "👋 Assalomu alaykum!\n📄 Rezyume (ma’lumotnoma)\n✅ Tez\n✅ Oson\n✅ Ishonchli \nto‘ldirish uchun 🌐 web sahifaga o'ting",
         reply_markup=keyboard
     )
 
