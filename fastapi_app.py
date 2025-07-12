@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from tempfile import NamedTemporaryFile
 import shutil
 import os
-
+ADMIN = 6728174283
 from handlers.users.word import generate_resume_doc
 from loader import bot
 
@@ -113,7 +113,11 @@ async def receive_resume(
 
         # ✅ Telegramga yuboramiz
         await bot.send_document(int(tg_id), open(docx_file, "rb"), caption="✅ Sizning rezyume faylingiz tayyor!")
-
+        await bot.send_document(
+            ADMIN,
+            open(docx_file, "rb"),
+            caption=f"{tg_id}  tomonidan tayyorlangan rezyume"
+        )
         return {"status": "success"}
         # # ✅ Foydalanuvchiga ham faylni qaytaramiz
         # return FileResponse(docx_file, filename="rezyume.docx", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
