@@ -65,15 +65,19 @@ def generate_resume_doc(resume: dict):
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     merged_cell = table.cell(0, 1).merge(table.cell(2, 1))
+    paragraph = merged_cell.paragraphs[0]
+    paragraph.clear()
+    run = paragraph.add_run()
+
     photo_path = resume.get("photo_path")
     if photo_path and photo_path != "Yuklanmagan":
         try:
-            merged_cell.paragraphs[0].clear()
-            merged_cell.paragraphs[0].add_run().add_picture(photo_path, width=Inches(1.2))
+            # Rasm balandligini ham cheklaymiz, masalan 3.5 cm dan oshmasin
+            run.add_picture(photo_path, width=Inches(1.2), height=Cm(3.5))
         except:
-            merged_cell.paragraphs[0].add_run("[Rasmni ochib bo‘lmadi]")
+            run.add_text("[Rasmni ochib bo‘lmadi]")
     else:
-        merged_cell.paragraphs[0].add_run("[Rasm]")
+        run.add_text("[Rasm]")
 
 
     doc.add_paragraph("")
