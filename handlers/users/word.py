@@ -73,7 +73,7 @@ def generate_resume_doc(resume: dict):
     if photo_path and photo_path != "Yuklanmagan":
         try:
             # Rasm balandligini ham cheklaymiz, masalan 3.5 cm dan oshmasin
-            run.add_picture(photo_path, width=Inches(1.2), height=Cm(3.5))
+            run.add_picture(photo_path, width=Cm(3), height=Cm(4))
         except:
             run.add_text("[Rasmni ochib bo‘lmadi]")
     else:
@@ -205,4 +205,5 @@ def generate_resume_doc(resume: dict):
     doc.save(filename)
     print(f"✅ Word fayl yaratildi: {filename}")
     return filename
+
 
