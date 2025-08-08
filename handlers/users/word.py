@@ -39,10 +39,10 @@ def generate_resume_doc(resume: dict):
 
     # Margins
     section = doc.sections[0]
-    section.left_margin = Cm(2.5)
-    section.right_margin = Cm(1.5)
-    section.top_margin = Cm(2.5)
-    section.bottom_margin = Cm(2)
+    section.left_margin = Cm(2)
+    section.right_margin = Cm(1)
+    section.top_margin = Cm(1.5)
+    section.bottom_margin = Cm(1)
 
     # 1-jadval: sarlavha, ism, lavozim, rasm
     table = doc.add_table(rows=3, cols=2)
@@ -205,3 +205,4 @@ def generate_resume_doc(resume: dict):
     doc.save(filename)
     print(f"✅ Word fayl yaratildi: {filename}")
     return filename
+
