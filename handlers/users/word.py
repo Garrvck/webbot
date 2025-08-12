@@ -100,7 +100,7 @@ def generate_resume_doc(resume: dict):
             p = table.cell(row_idx, col_idx).paragraphs[0]
             add_field(p, label, value)
 
-    table = doc.add_table(rows=3, cols=1)
+    table = doc.add_table(rows=4, cols=1)
     hide_borders(table)
 
     data = [
@@ -206,6 +206,7 @@ def generate_resume_doc(resume: dict):
     doc.save(filename)
     print(f"✅ Word fayl yaratildi: {filename}")
     return filename
+
 
 
 
