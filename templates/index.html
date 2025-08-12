@@ -110,7 +110,7 @@
       <button type="button" onclick="addRelative()">+ Qarindosh qo‘shish</button>
     </div>
 
-    <button type="button" onclick="submitForm()">Tayyor</button>
+    <button id="readyBtn" type="button" onclick="submitForm()">Tayyor</button>
   </form>
 
   <script>
@@ -142,6 +142,9 @@
     }
 
     async function submitForm() {
+      const btn = document.getElementById("readyBtn");
+      btn.disabled = true;               // tugma ishlamaydi
+      btn.innerText = "Yuklanmoqda...";  // foydalanuvchiga jarayon ketayotgani ko‘rsatiladi
       const form = document.getElementById('resumeForm');
       const formData = new FormData(form);  // Rasm + matnlar
 
@@ -177,9 +180,13 @@
           }
         } else {
           alert("❌ Xatolik: " + result.error);
+          btn.disabled = false;
+          btn.innerText = "Tayyor";
         }
       } catch (error) {
         alert("❌ Serverga ulanishda xatolik: " + error.message);
+        btn.disabled = false;
+        btn.innerText = "Tayyor";
       }
     }
   </script>
@@ -187,3 +194,4 @@
 
 </body>
 </html>
+
