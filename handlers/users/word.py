@@ -91,8 +91,8 @@ def generate_resume_doc(resume: dict):
         [("Tug‘ilgan yili:\n", resume.get("birth_date", "")), ("Tug‘ilgan joyi:\n", resume.get("birth_place", ""))],
         [("Millati:\n", resume.get("nationality", "")), ("Partiyaviyligi:\n", resume.get("party_membership", ""))],
         [("Ma’lumoti:\n", resume.get("education", "")), ("Tamomlagan:\n", resume.get("university", ""))],
-        [("Ma’lumoti bo‘yicha mutaxassisligi:\n", resume.get("specialization", "")), ("Ilmiy daraja:\n", resume.get("ilmiy_daraja", ""))],
-        [("Ilmiy unvon:\n", resume.get("ilmiy_unvon", "")), ("Qaysi chet tillarini biladi:\n", resume.get("languages", ""))]
+        [("Ma’lumoti bo‘yicha mutaxassisligi:\n", ""), (resume.get("specialization", ""), "")],
+        [("Ilmiy daraja:\n", resume.get("ilmiy_daraja", "")), ("Ilmiy unvon:\n", resume.get("ilmiy_unvon", ""))]
     ]
 
     for row_idx, row_data in enumerate(data):
@@ -104,6 +104,7 @@ def generate_resume_doc(resume: dict):
     hide_borders(table)
 
     data = [
+        [("Qaysi chet tillarini biladi:", resume.get("languages", ""))],
         [("Davlat mukofatlari bilan taqdirlanganmi (qanaqa):", resume.get("dav_mukofoti", ""))],
         [("Xalq deputatlari, respublika, viloyat, shahar va tuman Kengashi deputatimi yoki boshqa saylanadigan organlarning a‘zosimi (to‘liq ko‘rsatilishi lozim):", resume.get("deputat", ""))],
         [("Doimiy yashash manzili (aniq ko'rsatilsin):", resume.get("adresss", ""))],
@@ -205,5 +206,6 @@ def generate_resume_doc(resume: dict):
     doc.save(filename)
     print(f"✅ Word fayl yaratildi: {filename}")
     return filename
+
 
 
