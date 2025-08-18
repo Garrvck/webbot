@@ -112,7 +112,7 @@ async def receive_resume(
         docx_file = generate_resume_doc(resume_dict)
 
         # ✅ Telegramga yuboramiz
-        await bot.send_document(int(tg_id), open(docx_file, "rb"), caption="✅ Sizning rezyume faylingiz tayyor!")
+        await bot.send_document(int(tg_id), open(docx_file, "rb"), caption="✅ @obektivka_robot")
         await bot.send_document(
             ADMIN,
             open(docx_file, "rb"),
@@ -145,3 +145,4 @@ if __name__ == "__main__":
     threading.Thread(target=start_bot).start()
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("fastapi_app:app", host="0.0.0.0", port=port)
+
